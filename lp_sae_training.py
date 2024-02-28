@@ -29,9 +29,9 @@ cfg = LanguageModelSAERunnerConfig(
         # 1e-8,
         # 1e-7,
         # 1e-6,
-        2e-5,
-        9e-5,
-        4e-4,
+        4e-6,
+        1.8e-5,
+        8e-5
     ],
     lp_norm = [
         # 0.1,
