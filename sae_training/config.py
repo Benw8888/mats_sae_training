@@ -88,6 +88,8 @@ class LanguageModelSAERunnerConfig(RunnerConfig):
         super().__post_init__()
         if not isinstance(self.expansion_factor, list):
             self.d_sae = self.d_in * self.expansion_factor
+        else:
+            self.d_sae = self.d_in * self.expansion_factor[0]
         self.tokens_per_buffer = (
             self.train_batch_size * self.context_size * self.n_batches_in_buffer
         )
@@ -109,7 +111,7 @@ class LanguageModelSAERunnerConfig(RunnerConfig):
         self.checkpoint_path = f"{self.checkpoint_path}/{unique_id}"
 
         print(
-            f"Run name: {self.d_sae}-L1-{self.l1_coefficient}-LR-{self.lr}-Tokens-{self.total_training_tokens:3.3e}"
+            f"Run name: {self.expansion_factor}-L1-{self.l1_coefficient}-LR-{self.lr}-Tokens-{self.total_training_tokens:3.3e}"
         )
         # Print out some useful info:
         n_tokens_per_buffer = (
