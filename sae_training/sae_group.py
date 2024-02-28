@@ -23,11 +23,19 @@ class SAEGroup:
             keys, values = zip(*hyperparameters.items())
         else:
             keys, values = (), ([()],)  # Ensure product(*values) yields one combination
+        
+        i = 0
+        for _ in product(*values):
+            i +=1
+           
+        print(f"Generating {i} saes")
 
         # Create all combinations of hyperparameters
         for combination in product(*values):
             params = dict(zip(keys, combination))
             cfg_copy = dataclasses.replace(cfg, **params)
+            cfg_copy.__post_init__()
+            print(cfg_copy)
             # Insert the layer into the hookpoint
             cfg_copy.hook_point = cfg_copy.hook_point.format(layer=cfg_copy.hook_point_layer)
             # Create and store both the SparseAutoencoder instance and its parameters

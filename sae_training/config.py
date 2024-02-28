@@ -57,6 +57,7 @@ class LanguageModelSAERunnerConfig(RunnerConfig):
     b_dec_init_method: str = "geometric_median"
     expansion_factor: int = 4
     from_pretrained_path: Optional[str] = None
+    d_sae: Optional[int] = None
 
     # Training Parameters
     l1_coefficient: float = 1e-3
@@ -85,7 +86,8 @@ class LanguageModelSAERunnerConfig(RunnerConfig):
 
     def __post_init__(self):
         super().__post_init__()
-        self.d_sae = self.d_in * self.expansion_factor
+        if not isinstance(self.expansion_factor, list):
+            self.d_sae = self.d_in * self.expansion_factor
         self.tokens_per_buffer = (
             self.train_batch_size * self.context_size * self.n_batches_in_buffer
         )

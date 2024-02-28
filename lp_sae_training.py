@@ -19,19 +19,24 @@ cfg = LanguageModelSAERunnerConfig(
     is_dataset_tokenized=False,
     
     # SAE Parameters
-    expansion_factor = 64,
+    expansion_factor = [16,32],
     b_dec_init_method = "geometric_median",
     
     # Training Parameters
     lr = 4e-4,
-    l1_coefficient = [ #8e-5
-        # 1e-9,
-        # 1e-8,
-        # 1e-7,
-        # 1e-6,
-        4e-6,
-        1.8e-5,
-        8e-5
+    l1_coefficient = [
+        # 8e-9,
+        # 8e-8,
+        # 8e-7, 
+        # 8e-6, # goal: a bit less than this
+        # # 4e-6,
+        # # 1.8e-5,
+        # 8e-5,
+        
+        4e-7,
+        8e-7,
+        2e-6,
+        
     ],
     lp_norm = [
         # 0.1,
@@ -43,7 +48,7 @@ cfg = LanguageModelSAERunnerConfig(
         # 0.7,
         # 0.8,
         # 0.9,
-        1,
+        # 1,
         # 1.1,
     ],
     lr_scheduler_name="constantwithwarmup",
@@ -53,7 +58,7 @@ cfg = LanguageModelSAERunnerConfig(
     
     # Activation Store Parameters
     n_batches_in_buffer = 128,
-    total_training_tokens = 300_000_000,
+    total_training_tokens = 100_000_000,
     store_batch_size = 32,
     
     # Dead Neurons and Sparsity
