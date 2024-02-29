@@ -33,9 +33,11 @@ cfg = LanguageModelSAERunnerConfig(
         # # 1.8e-5,
         # 8e-5,
         
-        4e-7,
+        # 4e-7,
         8e-7,
-        2e-6,
+        # 2e-6,
+        8e-6,
+        
         
     ],
     lp_norm = [
@@ -46,7 +48,7 @@ cfg = LanguageModelSAERunnerConfig(
         # 0.5,
         0.6,
         # 0.7,
-        # 0.8,
+        0.8,
         # 0.9,
         # 1,
         # 1.1,
@@ -58,11 +60,11 @@ cfg = LanguageModelSAERunnerConfig(
     
     # Activation Store Parameters
     n_batches_in_buffer = 128,
-    total_training_tokens = 100_000_000,
+    total_training_tokens = 300_000_000,
     store_batch_size = 32,
     
     # Dead Neurons and Sparsity
-    use_ghost_grads=True,
+    use_ghost_grads=False,
     feature_sampling_window = 1000,
     dead_feature_window=5000,
     dead_feature_threshold = 1e-6,
