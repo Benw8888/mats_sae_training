@@ -196,34 +196,6 @@ def train_sae_on_language_model(
             loss.backward()
             sparse_autoencoder.remove_gradient_parallel_to_decoder_directions()
             optimizer[i].step()
-
-            # checkpoint if at checkpoint frequency
-            # if n_checkpoints > 0 and n_training_tokens > checkpoint_thresholds[0]:
-            #     sparse_autoencoder.set_decoder_norm_to_unit_norm()
-            #     suffix = wandb_log_suffix(sae_group.cfg, hyperparams) # differentiates sparse autoencoders
-                
-            #     log_feature_sparsity_path = f"{sae_group.cfg.checkpoint_path}/{n_training_tokens}_{sparse_autoencoder.get_name()}{suffix}_log_feature_sparsity.pt"
-            #     log_feature_sparsity = torch.log10(feature_sparsity + 1e-10).detach().cpu()
-            #     torch.save(log_feature_sparsity, log_feature_sparsity_path)
-            #     checkpoint_thresholds.pop(0)
-            #     if len(checkpoint_thresholds) == 0:
-            #         n_checkpoints = 0
-            #     if sparse_autoencoder.cfg.log_to_wandb:
-            #         model_artifact = wandb.Artifact(
-            #             f"{sparse_autoencoder.get_name()}",
-            #             type="model",
-            #             metadata=dict(sparse_autoencoder.cfg.__dict__),
-            #         )
-            #         model_artifact.add_file(path)
-            #         wandb.log_artifact(model_artifact)
-
-            #         sparsity_artifact = wandb.Artifact(
-            #             f"{sparse_autoencoder.get_name()}_log_feature_sparsity",
-            #             type="log_feature_sparsity",
-            #             metadata=dict(sparse_autoencoder.cfg.__dict__),
-            #         )
-            #         sparsity_artifact.add_file(log_feature_sparsity_path)
-            #         wandb.log_artifact(sparsity_artifact)
                     
         # checkpoint if at checkpoint frequency
         if n_checkpoints > 0 and n_training_tokens > checkpoint_thresholds[0]:

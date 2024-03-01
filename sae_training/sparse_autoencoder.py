@@ -134,6 +134,7 @@ class SparseAutoencoder(HookedRootModule):
 
         mse_loss = mse_loss.mean()
         sparsity = feature_acts.norm(p=self.lp_norm, dim=1).mean(dim=(0,))
+        # sparsity = sparsity/(self.d_sae**(1/self.lp_norm - 1))  # renormalize to calibrate for changing Lp norm
         l1_loss = self.l1_coefficient * sparsity
         loss = mse_loss + l1_loss + mse_loss_ghost_resid
 
@@ -323,5 +324,6 @@ class SparseAutoencoder(HookedRootModule):
         return instance
 
     def get_name(self):
-        sae_name = f"sparse_autoencoder_{self.cfg.model_name}_{self.cfg.hook_point}_{self.cfg.d_sae}"
+        model_name
+        sae_name = f"sparse_autoencoder_{model_name}_{self.cfg.hook_point}_{self.cfg.d_sae}"
         return sae_name
