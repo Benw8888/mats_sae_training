@@ -189,7 +189,7 @@ def train_sae_on_language_model(
                 # record loss frequently, but not all the time.
                 if use_wandb and ((n_training_steps + 1) % (wandb_log_frequency * 10) == 0):
                     sparse_autoencoder.eval()
-                    suffix = wandb_log_suffix(sparse_autoencoder.cfg, hyperparams)
+                    suffix = wandb_log_suffix(sae_group.cfg, hyperparams)
                     run_evals(sparse_autoencoder, activation_store, model, n_training_steps, suffix=suffix)
                     sparse_autoencoder.train()
 
