@@ -1,6 +1,7 @@
+import os
+import sys
+
 import torch
-import os 
-import sys 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["WANDB__SERVICE_WAIT"] = "300"
@@ -11,10 +12,10 @@ from sae_training.lm_runner import language_model_sae_runner
 cfg = LanguageModelSAERunnerConfig(
 
     # Data Generating Function (Model + Training Distibuion)
-    model_name = "EleutherAI/pythia-14m", #"gpt2-small",
+    model_name =  "gpt2-small", # "EleutherAI/pythia-14m",
     hook_point = "blocks.{layer}.hook_resid_pre",
-    hook_point_layer = 3,
-    d_in = 128, #768,
+    hook_point_layer = 6, # 3,
+    d_in = 768, # 128,
     dataset_path = "Skylion007/openwebtext",
     is_dataset_tokenized=False,
     
@@ -23,7 +24,7 @@ cfg = LanguageModelSAERunnerConfig(
     b_dec_init_method = "geometric_median",
     
     # Training Parameters
-    lr = 4e-4,
+    lr = 2e-4,
     l1_coefficient = [
         # 8e-9,
         # 8e-8,
@@ -33,36 +34,34 @@ cfg = LanguageModelSAERunnerConfig(
         # # 1.8e-5,
         # 8e-5,
         
-        # 8e-8,
-        # 8e-7,
-        # 8e-6,
-        # 8e-5,
-        # 8e-4,
-        
+        4e-7, # gpt2 L0.6
+        8e-7,
+        1.6e-6,
+        3.2e-6,
 
-        3e-9,
-        5.6e-9,
-        1e-8,
-        1.8e-8,
-        3e-8,
-        5.6e-8,
-        1e-7,
-        1.8e-7,
-        3e-7,
-        5.6e-7,
-        1e-6,
-        1.8e-6,
-        3e-6,
-        5.6e-6,
-        1e-5,
-        1.8e-5,
-        3e-5,
-        5.6e-5,
-        1e-4,
-        1.8e-4,
-        3e-4,
-        
+        # 3e-9,   # pythia 14m L0.6, 0.8
+        # 5.6e-9,
+        # 1e-8,
+        # 1.8e-8,
+        # 3e-8,
+        # 5.6e-8,
+        # 1e-7,
+        # 1.8e-7,
+        # 3e-7,
+        # 5.6e-7,
+        # 1e-6,
+        # 1.8e-6,
+        # 3e-6,
+        # 5.6e-6,
+        # 1e-5,
+        # 1.8e-5,
+        # 3e-5,
+        # 5.6e-5,
         # 1e-4,
+        # 1.8e-4,
+        # 3e-4,
+        
+        # 1e-4,    # pythia 14m L1
         # 1.33e-4,
         # 1.8e-4,
         # 2.37e-4,
@@ -78,11 +77,8 @@ cfg = LanguageModelSAERunnerConfig(
     ],
     lp_norm = [
         0.6,
-        # 0.7,
-        0.8,
-        # 0.9,
+        # 0.8,
         # 1,
-        # 1.1,
     ],
     lr_scheduler_name="constantwithwarmup",
     train_batch_size = 4096,
