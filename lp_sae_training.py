@@ -20,11 +20,11 @@ cfg = LanguageModelSAERunnerConfig(
     is_dataset_tokenized=False,
     
     # SAE Parameters
-    expansion_factor = 64, #[16,32,64],
+    expansion_factor = 16, #[16,32,64],
     b_dec_init_method = "geometric_median",
     
     # Training Parameters
-    lr = 2e-4,
+    lr = 5e-5, #4e-4
     l1_coefficient = [
         # 8e-9,
         # 8e-8,
@@ -34,10 +34,26 @@ cfg = LanguageModelSAERunnerConfig(
         # # 1.8e-5,
         # 8e-5,
         
-        4e-7, # gpt2 L0.6
+        # 4e-7, # gpt2 L0.6 old hy
+        # 8e-7,
+        # 1.6e-6,
+        # 3.2e-6,
+        
+        # gpt2 L0.6
+        2.5e-8,
+        5e-8,
+        1e-7, 
+        2e-7,
+        4e-7,
         8e-7,
         1.6e-6,
-        3.2e-6,
+        
+        
+        # # gpt2 L1 exp 16
+        # 1e-5,
+        # 2e-5,
+        # 4e-5,
+        # 8e-5,
 
         # 3e-9,   # pythia 14m L0.6, 0.8
         # 5.6e-9,
