@@ -12,15 +12,15 @@ from sae_training.lm_runner import language_model_sae_runner
 cfg = LanguageModelSAERunnerConfig(
 
     # Data Generating Function (Model + Training Distibuion)
-    model_name =  "gpt2-small", # "EleutherAI/pythia-14m",
+    model_name =  "gpt2-small", #"EleutherAI/pythia-14m", #"gpt2-small",
     hook_point = "blocks.{layer}.hook_resid_pre",
-    hook_point_layer = 6, # 3,
-    d_in = 768, # 128,
+    hook_point_layer = 6, #3, # 6
+    d_in = 768, #128, # 768
     dataset_path = "Skylion007/openwebtext",
     is_dataset_tokenized=False,
     
     # SAE Parameters
-    expansion_factor = 16, #[16,32,64],
+    expansion_factor = 16, #64, #[16,32,64],
     b_dec_init_method = "geometric_median",
     
     # Training Parameters
@@ -34,28 +34,60 @@ cfg = LanguageModelSAERunnerConfig(
         # # 1.8e-5,
         # 8e-5,
         
-        # 4e-7, # gpt2 L0.6 old hy
+        # # gpt2 L0.6
+        # 2.5e-8,
+        # 5e-8,
+        # 1e-7, 
+        # 2e-7,
+        # 4e-7,
         # 8e-7,
         # 1.6e-6,
-        # 3.2e-6,
         
-        # gpt2 L0.6
-        2.5e-8,
-        5e-8,
-        1e-7, 
-        2e-7,
-        4e-7,
-        8e-7,
-        1.6e-6,
+        # gpt2 L0.6 extension
+        # 1.25e-8,
+        # 1.77e-8,
+        # 3.54e-8,
+        # 7e-8,
+        # 1.4e-7,
+        # 2.8e-7,
+        # 5.7e-7,
+        # 11.3e-7, 
         
-        
+        # gpt2 L0.6 extension 2
+        2.26e-6,
+        3.2e-6,
+        4.53e-6,
+        6.4e-6,
+               
         # # gpt2 L1 exp 16
         # 1e-5,
         # 2e-5,
         # 4e-5,
         # 8e-5,
+        
+        # # gpt2 L1 exp 16 extension
+        # 5e-6,
+        # 0.7e-5,
+        # 1.4e-5,
+        # 2.8e-5,
+        # 5.7e-5,
+        
+        # gpt2 L1 extension 2
+        1.13e-4,
+        1.6e-4,
+        2.26e-4,
+        
+        # # pythia 14m L0.6,L0.8 extension (needs to be run twice)
+        # 1e-9,
+        # 1e-10,
+        # 1e-11,
+        # 1e-12,
+        # 1e-13,
+        # 0,
+        # 1e-3,
 
-        # 3e-9,   # pythia 14m L0.6, 0.8
+        # # pythia 14m L0.6, 0.8
+        # 3e-9,   
         # 5.6e-9,
         # 1e-8,
         # 1.8e-8,
@@ -77,7 +109,8 @@ cfg = LanguageModelSAERunnerConfig(
         # 1.8e-4,
         # 3e-4,
         
-        # 1e-4,    # pythia 14m L1
+        # # pythia 14m L1
+        # 1e-4,    
         # 1.33e-4,
         # 1.8e-4,
         # 2.37e-4,
@@ -90,11 +123,20 @@ cfg = LanguageModelSAERunnerConfig(
         # 1.8e-3,
         # 2.37e-3,
         # 3e-3,
+        
+        # # Pythia 14m L1 extension (needs to be run twice)
+        # 1e-5,
+        # 1e-6,
+        # 1e-7,
+        # 1e-8,
+        # 1e-9,
+        # 0,
+        
     ],
     lp_norm = [
         0.6,
         # 0.8,
-        # 1,
+        1,
     ],
     lr_scheduler_name="constantwithwarmup",
     train_batch_size = 4096,
