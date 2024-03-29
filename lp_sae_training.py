@@ -53,11 +53,11 @@ cfg = LanguageModelSAERunnerConfig(
         # 5.7e-7,
         # 11.3e-7, 
         
-        # gpt2 L0.6 extension 2
-        2.26e-6,
-        3.2e-6,
-        4.53e-6,
-        6.4e-6,
+        # # gpt2 L0.6 extension 2
+        # 2.26e-6,
+        # 3.2e-6,
+        # 4.53e-6,
+        # 6.4e-6,
                
         # # gpt2 L1 exp 16
         # 1e-5,
@@ -72,10 +72,18 @@ cfg = LanguageModelSAERunnerConfig(
         # 2.8e-5,
         # 5.7e-5,
         
-        # gpt2 L1 extension 2
-        1.13e-4,
-        1.6e-4,
-        2.26e-4,
+        # # gpt2 L1 extension 2
+        # 1.13e-4,
+        # 1.6e-4,
+        # 2.26e-4,
+        
+        # gpt2 lp^p
+        3e-5,
+        5e-5,
+        7e-5,
+        1e-4,
+        1.4e-4,
+        
         
         # # pythia 14m L0.6,L0.8 extension (needs to be run twice)
         # 1e-9,
@@ -134,9 +142,11 @@ cfg = LanguageModelSAERunnerConfig(
         
     ],
     lp_norm = [
+        0.2,
+        0.4,
         0.6,
         # 0.8,
-        1,
+        # 1,
     ],
     lr_scheduler_name="constantwithwarmup",
     train_batch_size = 4096,
