@@ -39,6 +39,7 @@ def language_model_sae_runner(cfg):
         dead_feature_threshold=cfg.dead_feature_threshold,
         use_wandb=cfg.log_to_wandb,
         wandb_log_frequency=cfg.wandb_log_frequency,
+        anneal=cfg.anneal,
     )
 
     if cfg.log_to_wandb:

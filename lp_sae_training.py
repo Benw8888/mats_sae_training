@@ -25,7 +25,7 @@ cfg = LanguageModelSAERunnerConfig(
     
     # Training Parameters
     lr = 4e-4, #5e-5, #4e-4
-    l1_coefficient = [
+    l1_coefficient = 
         # 8e-9,
         # 8e-8,
         # 8e-7, 
@@ -141,39 +141,38 @@ cfg = LanguageModelSAERunnerConfig(
         # 0,
         
         # pythia 14m lp^p
-        1e-8,
-        1e-7,
-        1e-6,
-        3e-6,
-        1e-5,
-        1.8e-5,
-        3e-5,
-        5.6e-5,
-        1e-4,    
-        1.8e-4,
-        3e-4,
-        4.22e-4,
-        5.62e-4,
-        7.50e-4,
-        1e-3,
-        1.33e-3,
-        1.8e-3,
-        2.37e-3,
-        3e-3,
-        1e-2,
+        # 1e-8,
+        # 1e-7,
+        # 1e-6,
+        # 3e-6,
+        # 1e-5,
+        # 1.8e-5,
+        # 3e-5,
+        # 5.6e-5,
+        # 1e-4,    
+        # 1.8e-4,
+        # 3e-4,
+        # 4.22e-4,
+        # 5.62e-4,
+        # 7.50e-4,
+        # 1e-3,
+        # 1.33e-3,
+        # 1.8e-3,
+        # 2.37e-3,
+        # 3e-3,
+        # 1e-2,
         
-    ],
-    lp_norm = [
-        0.2,
-        0.4,
-        0.6,
-        0.8,
-        1,
-    ],
+        # testing p annealing, pythia
+        1.33e-3
+    ,
+    lp_norm = 
+        1
+    ,
     lr_scheduler_name="constantwithwarmup",
     train_batch_size = 4096,
     context_size = 128,
     lr_warm_up_steps=5000,
+    anneal = True,
     
     # Activation Store Parameters
     n_batches_in_buffer = 128,
@@ -194,7 +193,7 @@ cfg = LanguageModelSAERunnerConfig(
     
     # Misc
     device = "cuda",
-    seed = 42,
+    seed = 40, #42
     n_checkpoints = 3,
     checkpoint_path = "checkpoints",
     dtype = torch.float32,

@@ -66,6 +66,7 @@ class LanguageModelSAERunnerConfig(RunnerConfig):
     lr_scheduler_name: str = "constantwithwarmup"  # constant, constantwithwarmup, linearwarmupdecay, cosineannealing, cosineannealingwarmup
     lr_warm_up_steps: int = 500
     train_batch_size: int = 4096
+    anneal: bool = False
 
     # Resampling protocol args
     use_ghost_grads: bool = False  # want to change this to true on some timeline.

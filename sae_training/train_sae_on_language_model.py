@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from torch.optim import Adam
 from tqdm import tqdm
@@ -6,10 +7,10 @@ from transformer_lens import HookedTransformer
 import wandb
 from sae_training.activations_store import ActivationsStore
 from sae_training.evals import run_evals
-from sae_training.optim import get_scheduler
-from sae_training.sparse_autoencoder import SparseAutoencoder
-from sae_training.sae_group import SAEGroup
 from sae_training.geom_median.src.geom_median.torch import compute_geometric_median
+from sae_training.optim import get_scheduler
+from sae_training.sae_group import SAEGroup
+from sae_training.sparse_autoencoder import SparseAutoencoder
 
 
 def train_sae_on_language_model(
@@ -22,6 +23,7 @@ def train_sae_on_language_model(
     dead_feature_threshold: float = 1e-8,  # how infrequently a feature has to be active to be considered dead
     use_wandb: bool = False,
     wandb_log_frequency: int = 50,
+    anneal: bool = False,
 ):
     total_training_tokens = sae_group.cfg.total_training_tokens
     total_training_steps = total_training_tokens // batch_size
@@ -64,6 +66,19 @@ def train_sae_on_language_model(
         ) for sae, opt in zip(sae_group, optimizer)
     ]
     
+    stored_feature_acts = [
+        []
+        for sae in sae_group
+    ]
+    num_anneals=10
+    anneal_p_times = np.linspace(0,total_training_tokens, num_anneals, endpoint=False, dtype=int)[1:]
+    anneal_p_multipliers = np.linspace(1, 0, num_anneals, endpoint=False)[1:]
+    original_ps = [
+        sae.lp_norm
+        for sae in sae_group
+    ]
+    
+    
     all_layers = sae_group.cfg.hook_point_layer
     if not isinstance(all_layers, list):
         all_layers = [all_layers]
@@ -92,6 +107,15 @@ def train_sae_on_language_model(
         # Do a training step.
         layer_acts = activation_store.next_batch()
         n_training_tokens += batch_size
+        
+        anneal_flag = False
+        if anneal:
+            if len(anneal_p_times) > 0:
+                if n_training_tokens >= anneal_p_times[0]:
+                    anneal_flag = True
+                    p_mult = anneal_p_multipliers[0]
+                    anneal_p_multipliers = anneal_p_multipliers[1:]
+                    anneal_p_times = anneal_p_times[1:]
         
         for i, (sparse_autoencoder), in enumerate(sae_group):
             hyperparams = sparse_autoencoder.cfg
@@ -148,6 +172,28 @@ def train_sae_on_language_model(
             did_fire = (feature_acts > 0).float().sum(-2) > 0
             n_forward_passes_since_fired[i] += 1
             n_forward_passes_since_fired[i][did_fire] = 0
+            
+            if anneal:
+                compressed_feature_acts = feature_acts.detach().clone().flatten()
+                stored_feature_acts[i].append(compressed_feature_acts[compressed_feature_acts > 0])
+                stored_feature_acts[i] = stored_feature_acts[i][-100:]
+                
+                if anneal_flag:
+                    with torch.no_grad():
+                        p = sparse_autoencoder.lp_norm
+                        new_p = original_ps[i] * p_mult
+                        
+                        # calculate value proportional to sparsity term (pre-alpha)
+                        old_sparsity_term = sum(f.pow(p).sum() for f in stored_feature_acts[i])
+                        new_sparsity_term = sum(f.pow(new_p).sum() for f in stored_feature_acts[i])
+                        
+                        
+                        new_alpha = old_sparsity_term * sparse_autoencoder.l1_coefficient / new_sparsity_term
+                        new_alpha *= (0.5)**(1/10)
+                        print(f"updating to p={new_p} and alpha={new_alpha}")
+                        
+                        sparse_autoencoder.l1_coefficient = new_alpha.detach().clone().item()
+                        sparse_autoencoder.lp_norm = new_p
 
             with torch.no_grad():
                 # Calculate the sparsities, and add it to a list, calculate sparsity metrics
