@@ -176,7 +176,8 @@ def train_sae_on_language_model(
             if anneal:
                 compressed_feature_acts = feature_acts.detach().clone().flatten()
                 stored_feature_acts[i].append(compressed_feature_acts[compressed_feature_acts > 0])
-                stored_feature_acts[i] = stored_feature_acts[i][-100:]
+                stored_feature_acts[i] = stored_feature_acts[i][-10:]
+                # print("Total number of feats in buffer: ", sum(len(s) for s in stored_feature_acts[0]))
                 
                 if anneal_flag:
                     with torch.no_grad():
@@ -189,7 +190,7 @@ def train_sae_on_language_model(
                         
                         
                         new_alpha = old_sparsity_term * sparse_autoencoder.l1_coefficient / new_sparsity_term
-                        new_alpha *= (0.5)**(1/10)
+                        # new_alpha *= (0.01)**(1/10)
                         print(f"updating to p={new_p} and alpha={new_alpha}")
                         
                         sparse_autoencoder.l1_coefficient = new_alpha.detach().clone().item()
@@ -215,8 +216,9 @@ def train_sae_on_language_model(
                         {
                             # losses
                             f"losses/mse_loss{suffix}": mse_loss.item(),
-                            f"losses/l1_loss{suffix}": (l1_loss
+                            f"losses/lp_norm{suffix}": (l1_loss
                             / sparse_autoencoder.l1_coefficient).nan_to_num(0).item(),  # normalize by l1 coefficient
+                            f"losses/lp_loss{suffix}": (l1_loss).nan_to_num(0).item(),
                             f"losses/ghost_grad_loss{suffix}": ghost_grad_loss.item(),
                             f"losses/overall_loss{suffix}": loss.item(),
                             # variance explained
